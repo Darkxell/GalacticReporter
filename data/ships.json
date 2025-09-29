@@ -1,0 +1,60 @@
+{
+    "dataset": "ships",
+    "data": {
+        "classes": [
+            {
+                "name": "storm",
+                "items": [
+                    "blaster",
+                    "collector",
+                    "repairdroid",
+                    "afterburner",
+                    "rocket",
+                    "aimcomputer",
+                    "perforator",
+                    "thermoblast"
+                ]
+            },
+            {
+                "name": "tank",
+                "items": [
+                    "blaster",
+                    "collector",
+                    "repairdroid",
+                    "afterburner",
+                    "shield",
+                    "taunt",
+                    "aimscrambler",
+                    "aggrobomb"
+                ]
+            },
+            {
+                "name": "engineer",
+                "items": [
+                    "blaster",
+                    "collector",
+                    "repairdroid",
+                    "afterburner",
+                    "repairtarget",
+                    "protector",
+                    "repairfield",
+                    "materializer"
+                ]
+            },
+            {
+                "name": "shock",
+                "items": [
+                    "blaster",
+                    "collector",
+                    "repairdroid",
+                    "afterburner",
+                    "speedactuator",
+                    "stuncharge",
+                    "aggrobeacon",
+                    "stundome"
+                ]
+            }
+        ],
+        "entries": []
+    }
+}
