@@ -53,6 +53,58 @@
                     "aggrobeacon",
                     "stundome"
                 ]
+            },
+            {
+                "name": "sniper",
+                "items": [
+                    "blaster",
+                    "collector",
+                    "repairdroid",
+                    "afterburner",
+                    "sniperblaster",
+                    "orbitalstrike",
+                    "attackcharge",
+                    "attackdroid"
+                ]
+            },
+            {
+                "name": "defender",
+                "items": [
+                    "blaster",
+                    "collector",
+                    "repairdroid",
+                    "afterburner",
+                    "repairfieldturret",
+                    "attackfieldturret",
+                    "stickybomb",
+                    "mine"
+                ]
+            },
+            {
+                "name": "hijacker",
+                "items": [
+                    "blaster",
+                    "collector",
+                    "repairdroid",
+                    "afterburner",
+                    "scopeshifter",
+                    "magnettrap",
+                    "corruptioncloud",
+                    "alliescover"
+                ]
+            },
+            {
+                "name": "enervator",
+                "items": [
+                    "blaster",
+                    "collector",
+                    "repairdroid",
+                    "afterburner",
+                    "damageinverter",
+                    "quantumleap",
+                    "deflectiondroid",
+                    "lightningchain"
+                ]
             }
         ],
         "entries": []

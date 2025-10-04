@@ -419,6 +419,186 @@
 				{"level":98, "name":"$aim.98", "warmup":0.05, "active":48.8, "cooldown":86.3, "accuracy":40.50, "critical":25, "energy":92},
 				{"level":98, "name":"$aimcomputer.rare.tauceti", "warmup":0.05, "active":53.68, "cooldown":94.93, "accuracy":43.20, "critical":29, "energy":80}
 			]
+		},
+		{
+			"item":"perforator",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"thermoblast",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"shield",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"taunt",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"aimscrambler",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"aggrobomb",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"repairtarget",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"protector",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"repairfield",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"materializer",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"speedactuator",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"stuncharge",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"aggrobeacon",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"stundome",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"sniperblaster",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"orbitalstrike",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"attackcharge",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"attackdroid",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"repairfieldturret",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"attackfieldturret",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"stickybomb",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"mine",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"scopeshifter",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"magnettrap",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"corruptioncloud",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"alliescover",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"damageinverter",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"quantumleap",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"deflectiondroid",
+			"entries":[
+				
+			]
+		},
+		{
+			"item":"lightningchain",
+			"entries":[
+				
+			]
 		}
 	]
 }
