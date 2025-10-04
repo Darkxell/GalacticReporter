@@ -597,7 +597,21 @@
 		{
 			"item":"lightningchain",
 			"entries":[
-				
+				{"level":42, "name":"$lightningchain.rare.mizar", "warmup":0.05, "delay":0.2, "cooldown":22, "power":584.95, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 95},
+				{"level":59, "name":"$lightningchain.rare.sol", "warmup":0.05, "delay":0.2, "cooldown":22, "power":4671.40, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 133},
+				{"level":69, "name":"$lightningchain.rare.draconis", "warmup":0.05, "delay":0.2, "cooldown":22, "power":15857.39, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 156},
+				{"level":81, "name":"$lightningchain.sirius.quick.sirius", "warmup":0.05, "delay":0.2, "cooldown":14.67, "power":33289.95, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 128},
+				{"level":81, "name":"$lightningchain.sirius.sirius", "warmup":0.05, "delay":0.2, "cooldown":22, "power":49934.93, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 192},
+				{"level":81, "name":"$lightningchain.sirius.strong.sirius", "warmup":0.05, "delay":0.2, "cooldown":33.01, "power":74902.40, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 288},
+				{"level":84, "name":"$lightningchain.84", "warmup":0.05, "delay":0.2, "cooldown":20, "power":61172.19, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 189},
+				{"level":86, "name":"$lightningchain.86", "warmup":0.05, "delay":0.2, "cooldown":20, "power":67969.11, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 194},
+				{"level":88, "name":"$lightningchain.88", "warmup":0.05, "delay":0.2, "cooldown":20, "power":74766.02, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 198},
+				{"level":90, "name":"$lightningchain.90", "warmup":0.05, "delay":0.2, "cooldown":20, "power":81562.92, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 203},
+				{"level":92, "name":"$lightningchain.92", "warmup":0.05, "delay":0.2, "cooldown":20, "power":88359.83, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 207},
+				{"level":94, "name":"$lightningchain.94", "warmup":0.05, "delay":0.2, "cooldown":20, "power":95156.75, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 212},
+				{"level":96, "name":"$lightningchain.96", "warmup":0.05, "delay":0.2, "cooldown":20, "power":101953.65, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 216},
+				{"level":98, "name":"$lightningchain.98", "warmup":0.05, "delay":0.2, "cooldown":20, "power":108750.56, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 221},
+				{"level":98, "name":"$lightningchain.rare.tauceti", "warmup":0.05, "delay":0.2, "cooldown":22, "power":125063.14, "range":2.72, "links":7, "powerincreaseperlink":25, "energy": 221}
 			]
 		}
 	]
