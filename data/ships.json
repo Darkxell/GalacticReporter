@@ -3,6 +3,15 @@
     "data": {
         "classes": [
             {
+                "name": "raider",
+                "items": [
+                    "blaster",
+                    "collector",
+                    "repairdroid",
+                    "afterburner"
+                ]
+            },
+            {
                 "name": "storm",
                 "items": [
                     "blaster",
@@ -107,6 +116,194 @@
                 ]
             }
         ],
-        "entries": []
+        "entries": [
+            {
+                "name": "Phoenix S Transport",
+                "class": "raider",
+                "speed": 684,
+                "itempenalty": 0,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 3, "health": 35},
+                    {"name": "$armor.thermograde", "level": 16, "health": 72},
+                    {"name": "$armor.deluvian", "level": 17, "health": 82}
+                ]
+            },
+            {
+                "name": "AnIn-1300 Light Transport",
+                "class": "raider",
+                "speed": 835.9,
+                "itempenalty": 0,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 6, "health": 54},
+                    {"name": "$armor.thermograde", "level": 16, "health": 112},
+                    {"name": "$armor.deluvian", "level": 17, "health": 126}
+                ]
+            },
+            {
+                "name": "AnIn-X Colonial Lifter",
+                "class": "raider",
+                "speed": 901.38,
+                "itempenalty": 0,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 8, "health": 86},
+                    {"name": "$armor.thermograde", "level": 16, "health": 178},
+                    {"name": "$armor.deluvian", "level": 17, "health": 202}
+                ]
+            },
+            {
+                "name": "AnIn-1450 Armored Transport",
+                "class": "tank",
+                "speed":  835.9,
+                "itempenalty": 3,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 8, "health": 69},
+                    {"name": "$armor.thermograde", "level": 16, "health": 143},
+                    {"name": "$armor.deluvian", "level": 17, "health": 162}
+                ]
+            },
+            {
+                "name": "AnIn-1800 Rapid Tank",
+                "class": "tank",
+                "speed":  757.33,
+                "itempenalty": 3,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 9, "health": 111},
+                    {"name": "$armor.thermograde", "level": 16, "health": 230},
+                    {"name": "$armor.deluvian", "level": 17, "health": 260}
+                ]
+            },
+            {
+                "name": "AnIn-X Colonial Jet",
+                "class": "tank",
+                "speed":  901.38,
+                "itempenalty": 3,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 9, "health": 97},
+                    {"name": "$armor.thermograde", "level": 16, "health": 201},
+                    {"name": "$armor.deluvian", "level": 17, "health": 227}
+                ]
+            },
+            {
+                "name": "Mantis Vega Storm",
+                "class": "storm",
+                "speed":  849,
+                "itempenalty": 2,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 10, "health": 84},
+                    {"name": "$armor.thermograde", "level": 16, "health": 174},
+                    {"name": "$armor.deluvian", "level": 17, "health": 197}
+                ]
+            },
+            {
+                "name": "Mantis Vega Tank",
+                "class": "tank",
+                "speed":  757.33,
+                "itempenalty": 2,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 10, "health": 126},
+                    {"name": "$armor.thermograde", "level": 16, "health": 262},
+                    {"name": "$armor.deluvian", "level": 17, "health": 296}
+                ]
+            },
+            {
+                "name": "AnIn-TR War Hawk",
+                "class": "storm",
+                "speed": 849,
+                "itempenalty": 2,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 10, "health": 88},
+                    {"name": "$armor.thermograde", "level": 16, "health": 183},
+                    {"name": "$armor.deluvian", "level": 17, "health": 206}
+                ]
+            },
+            {
+                "name": "AnIn-2000 Light Engineer",
+                "class": "engineer",
+                "speed": 879.56,
+                "itempenalty": 2,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 10, "health": 75},
+                    {"name": "$armor.thermograde", "level": 16, "health": 156},
+                    {"name": "$armor.deluvian", "level": 17, "health": 176}
+                ]
+            },
+            {
+                "name": "AnIn-2000 Space Tank",
+                "class": "tank",
+                "speed": 757.33,
+                "itempenalty": 2,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 10, "health": 126},
+                    {"name": "$armor.thermograde", "level": 16, "health": 262},
+                    {"name": "$armor.deluvian", "level": 17, "health": 296}
+                ]
+            },
+            {
+                "name": "AnIn-2000 Speed Stun",
+                "class": "shock",
+                "speed": 863.47,
+                "itempenalty": 2,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 10, "health": 79},
+                    {"name": "$armor.thermograde", "level": 16, "health": 164},
+                    {"name": "$armor.deluvian", "level": 17, "health": 185}
+                ]
+            },
+            {
+                "name": "AnIn-2000 Storm",
+                "class": "storm",
+                "speed": 849,
+                "itempenalty": 2,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 10, "health": 84},
+                    {"name": "$armor.thermograde", "level": 16, "health": 174},
+                    {"name": "$armor.deluvian", "level": 17, "health": 197}
+                ]
+            },
+            {
+                "name": "AnIn-X Tank",
+                "class": "tank",
+                "speed": 803.17,
+                "itempenalty": 2,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 10, "health": 157},
+                    {"name": "$armor.thermograde", "level": 16, "health": 326},
+                    {"name": "$armor.deluvian", "level": 17, "health": 368}
+                ]
+            },
+            {
+                "name": "SC-SSX Overseer",
+                "class": "engineer",
+                "speed": 955.94,
+                "itempenalty": 2,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 10, "health": 94},
+                    {"name": "$armor.thermograde", "level": 16, "health": 195},
+                    {"name": "$armor.deluvian", "level": 17, "health": 220}
+                ]
+            },
+            {
+                "name": "SC-X Arrow Speed",
+                "class": "shock",
+                "speed": 935.84,
+                "itempenalty": 2,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 10, "health": 99},
+                    {"name": "$armor.thermograde", "level": 16, "health": 205},
+                    {"name": "$armor.deluvian", "level": 17, "health": 232}
+                ]
+            },
+            {
+                "name": "SC-X Thunderstorm",
+                "class": "storm",
+                "speed": 917.75,
+                "itempenalty": 2,
+                "armors": [
+                    {"name": "$armor.bulwark", "level": 10, "health": 105},
+                    {"name": "$armor.thermograde", "level": 16, "health": 218},
+                    {"name": "$armor.deluvian", "level": 17, "health": 246}
+                ]
+            }
+        ]
     }
 }
