@@ -1,0 +1,14 @@
+{
+    "dataset": "items",
+    "data": [
+        {"system": "vega", "minlevel": 1, "maxlevel": 15, "hasGolds": true, "hasAcients": true},
+        {"system": "antares", "minlevel": 16, "maxlevel": 25, "hasGolds": true, "hasAcients": true},
+        {"system": "gemini", "minlevel": 26, "maxlevel": 33, "hasGolds": true, "hasAcients": true},
+        {"system": "mizar", "minlevel": 34, "maxlevel": 43, "hasGolds": true, "hasAcients": true},
+        {"system": "sol", "minlevel": 44, "maxlevel": 55, "hasGolds": false, "hasAcients": false},
+        {"system": "soladvanced", "minlevel": 56, "maxlevel": 60, "hasGolds": true, "hasAcients": true},
+        {"system": "draconis", "minlevel": 61, "maxlevel": 70, "hasGolds": true, "hasAcients": true},
+        {"system": "sirius", "minlevel": 71, "maxlevel": 82, "hasGolds": false, "hasAcients": true},
+        {"system": "tauceti", "minlevel": 83, "maxlevel": 99, "hasGolds": true, "hasAcients": false}
+    ]
+}
