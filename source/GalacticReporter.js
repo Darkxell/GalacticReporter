@@ -14,40 +14,79 @@
  */
 function verifyInputs(ship, duration, enemiesCount, algo) {
     // Verify duration correctness
-    if (duration === undefined) return { code: 1, message: "No duration parameter was given" };
-    if (!Number.isInteger(duration)) return { code: 1, message: "Given duration parameter is not an integer number" };
-    if (duration < 1) return { code: 1, message: "Given duration parameter needs to be at least one second" };
-    if (duration > 36000) return { code: 1, message: "Given duration parameter can't go above 10 hours, or 36000 seconds" };
+    if (duration === undefined) return { code: 1, message: "No duration parameter was given." };
+    if (!Number.isInteger(duration)) return { code: 1, message: "Given duration parameter is not an integer number." };
+    if (duration < 1) return { code: 1, message: "Given duration parameter needs to be at least one second." };
+    if (duration > 36000) return { code: 1, message: "Given duration parameter can't go above 10 hours, or 36000 seconds." };
     // Verify enemy count correctness
-    if (enemiesCount === undefined) return { code: 1, message: "No enemiesCount parameter was given" };
-    if (!Number.isInteger(enemiesCount)) return { code: 1, message: "Given enemiesCount parameter is not an integer number" };
-    if (enemiesCount < 1) return { code: 1, message: "Given enemiesCount parameter needs to be at least one" };
-    if (enemiesCount > 36000) return { code: 1, message: "Given enemiesCount parameter can't go above 1000" };
+    if (enemiesCount === undefined) return { code: 1, message: "No enemiesCount parameter was given." };
+    if (!Number.isInteger(enemiesCount)) return { code: 1, message: "Given enemiesCount parameter is not an integer number." };
+    if (enemiesCount < 1) return { code: 1, message: "Given enemiesCount parameter needs to be at least one." };
+    if (enemiesCount > 36000) return { code: 1, message: "Given enemiesCount parameter can't go above 1000." };
+    // Verify ship structure correctness
+    // TODO
+    // No errors fallback
+    return { code: 0, message: "Inputs are complete." }
 }
 
-function profileDamage(ship, duration, enemiesCount, algo) {
-
+function profileDamage(ship, duration, enemiesCount, algo) { //TODO
+    // Exemple of a simulation on for 10 seconds, dealing a total of 950 dmg
+    simulationResult = {
+        totalDamage: 950, graph: [
+            { time: 1, damage: 100, item: "$blaster.fusion32" },
+            { time: 2, damage: 200, item: "$blaster.fusion32" },
+            { time: 4, damage: 450, item: "$rocket.32" },
+            { time: 5, damage: 550, item: "$blaster.fusion32" },
+            { time: 6, damage: 650, item: "$blaster.fusion32" },
+            { time: 7, damage: 750, item: "$blaster.fusion32" },
+            { time: 8, damage: 850, item: "$blaster.fusion32" },
+            { time: 9, damage: 950, item: "$blaster.fusion32" }]
+    }
+    return simulationResult
 }
 
-function profileTankyness(ship) {
-
+function profileTankyness(ship) { // TODO
+    return { effectiveHitpool: ship.health }
 }
 
-function profileMobility(ship) {
-
+function profileMobility(ship) {// TODO
+    maxSpeed = ship.speed
+    return { totalTravel: 150000, topSpeed: maxSpeed }
 }
 
-function profileValidity(ship) {
-
+function profileValidity(ship) { //TODO
+    return "vega"
 }
 
 /* ----- Export functions below ----- */
 
+/** Global static instance of the items dataset used for all computations */
+let DATASET_ITEMS = null
+/** Global static instance of the ships dataset used for all computations */
+let DATASET_SHIPS = null
+/** Global static instance of the systems dataset used for all computations */
+let DATASET_SYSTEMS = null
+
 /**
  * 
  */
-export function loadDataset() {
-
+export function loadDataset(dataset) {
+    if (!dataset) throw new Error("No dataset was given, ignored the load attempt.");
+    if (!dataset.dataset) throw new Error("Given dataset has no dataset property, hence its type could not be determined to be loaded.");
+    if (!dataset.data) throw new Error(`Given dataset for ${dataset.dataset} has no data attribute, and was not loaded.`);
+    switch (dataset.dataset) {
+        case "items":
+            DATASET_ITEMS = dataset;
+            break;
+        case "ships":
+            DATASET_SHIPS = dataset;
+            break;
+        case "systems":
+            DATASET_SYSTEMS = dataset;
+            break;
+        default:
+            break;
+    }
 }
 
 /**
@@ -82,5 +121,14 @@ export function computeProfile(ship, duration, enemiesCount, algo) {
     var status = verifyInputs(ship, duration, enemiesCount, algo);
     if (status.code !== 0) throw new Error(status.message);
 
-    // TODO : throw an error is some datasets are incomplete (Missing item data, spaceship data or systems data)
+    if (!DATASET_ITEMS) throw new Error("Item dataset is not loaded.");
+    if (!DATASET_SHIPS) throw new Error("Ships dataset is not loaded.");
+    if (!DATASET_SYSTEMS) throw new Error("System dataset is not loaded.");
+
+    computedDamage = profileDamage(ship, duration, enemiesCount, algo)
+    computedTankyness = profileTankyness(ship)
+    computedMobility = profileMobility(ship)
+    computedValidity = profileValidity(ship)
+
+    return { damage: computedDamage, tankyness: computedTankyness, mobility: computedMobility, validity: computedValidity }
 }
