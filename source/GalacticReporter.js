@@ -58,6 +58,53 @@ function profileValidity(ship) { //TODO
     return "vega"
 }
 
+/* ----- Utility runtime classes ----- */
+
+/**
+* Instance of a ship in combat.
+* Contains current information of a simulated ship's state, such as current active buffs or cooldowns.
+*/
+class SimulatedShip{
+    // Builds a new SimulatedShip given a static image of a loadout.
+    // Exemples of this structure may be returned from fetchPresets().
+    constructor(ship){
+        // Structure containing all needed static data about the ship
+        this.ship = ship;
+        // Amount of time in which the ship will be able to take its next action, in seconds.
+        // This may lower faster than real time if the ship is afflicted by a speed actuator
+        this.gcd = 0;
+        // Dictionnary of cooldowns for the different items 
+        itemcooldowns = [];
+        for(item in ship.items){
+             itemcooldowns.append({item : item, cooldown : 0});
+        }
+        this.itemcooldowns = itemcooldowns;
+    }
+
+    /** Advances time for this simulated ship by the given amount, in seconds. */
+    tick(ticktime){
+        this.gcd -= ticktime;
+        if (this.gcd < 0) this.gcd = 0;
+    }
+    
+    getHighestDamageItem(){}
+
+    /** Predicate that returns true if this SimualtedShip instance has at least 1 buffing item it can use */
+    hasBuffToUse(){
+        return false;
+    }
+    
+    /** Predicate that returns true if the given item is a combat useful buff. */
+    static isBuff(item){
+        return false;
+    }
+
+    /** Predicate that returns true if the given item will deal damage upon using it against a target. */
+    static isDamageDealer(item){
+        return false;
+    }
+}
+
 /* ----- Export functions below ----- */
 
 /** Global static instance of the items dataset used for all computations */
