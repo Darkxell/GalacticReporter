@@ -8,21 +8,25 @@
 
 <body>
     <script type="module">
-        import { loadDataset, computeProfile } from "../source/GalacticReporter.js";
+        import { loadDataset, fetchPresets, computeProfile } from "../source/GalacticReporter.js";
 
         async function runDemo() {
             try {
                 // Load the datasets
-                const response = await fetch("../GalacticBlueprints/items.json");
-                const dataset = await response.json();
-                const loadResult = loadDataset(dataset);
-                console.log("loadDataset() returned:", loadResult);
+                const datasets = ["items.json", "ships.json", "systems.json"];
+                const responses = await Promise.all( datasets.map(name => fetch(`../GalacticBlueprints/${name}`)));
+                const data = await Promise.all(responses.map(response => response.json()));
+                data.forEach(loadDataset);
+                console.log("Datasets loaded to GalacticReporter!");
 
                 // Create a ship from presets
-                ship = {}
+                var presets = fetchPresets();
+                console.log(presets);
+
+                var ship = {};
 
                 // Compute the damage profile for the ship we just made
-                const profile = computeProfile(ship, 60);
+                const profile = computeProfile(ship, 60, 1);
                 console.log("computeProfile() returned:", profile);
 
             } catch (err) {

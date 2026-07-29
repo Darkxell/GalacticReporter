@@ -31,7 +31,7 @@ function verifyInputs(ship, duration, enemiesCount, algo) {
 
 function profileDamage(ship, duration, enemiesCount, algo) { //TODO
     // Exemple of a simulation on for 10 seconds, dealing a total of 950 dmg
-    simulationResult = {
+    var simulationResult = {
         totalDamage: 950, graph: [
             { time: 1, damage: 100, item: "$blaster.fusion32" },
             { time: 2, damage: 200, item: "$blaster.fusion32" },
@@ -41,21 +41,21 @@ function profileDamage(ship, duration, enemiesCount, algo) { //TODO
             { time: 7, damage: 750, item: "$blaster.fusion32" },
             { time: 8, damage: 850, item: "$blaster.fusion32" },
             { time: 9, damage: 950, item: "$blaster.fusion32" }]
-    }
-    return simulationResult
+    };
+    return simulationResult;
 }
 
 function profileTankyness(ship) { // TODO
-    return { effectiveHitpool: ship.health }
+    return { effectiveHitpool: ship.health };
 }
 
 function profileMobility(ship) {// TODO
-    maxSpeed = ship.speed
-    return { totalTravel: 150000, topSpeed: maxSpeed }
+    var maxSpeed = ship.speed;
+    return { totalTravel: 150000, topSpeed: maxSpeed };
 }
 
 function profileValidity(ship) { //TODO
-    return "vega"
+    return "vega";
 }
 
 /* ----- Utility runtime classes ----- */
@@ -68,14 +68,15 @@ class SimulatedShip{
     // Builds a new SimulatedShip given a static image of a loadout.
     // Exemples of this structure may be returned from fetchPresets().
     constructor(ship){
-        // Structure containing all needed static data about the ship
+        // Structure containing all needed static data about the ship instance
+        // This is a ship loadout, not a raw hull from the dataset.
         this.ship = ship;
         // Amount of time in which the ship will be able to take its next action, in seconds.
         // This may lower faster than real time if the ship is afflicted by a speed actuator
         this.gcd = 0;
         // Dictionnary of cooldowns for the different items 
-        itemcooldowns = [];
-        for(item in ship.items){
+        var itemcooldowns = [];
+        for(item of ship.items){
              itemcooldowns.append({item : item, cooldown : 0});
         }
         this.itemcooldowns = itemcooldowns;
@@ -87,22 +88,59 @@ class SimulatedShip{
         if (this.gcd < 0) this.gcd = 0;
     }
     
-    getHighestDamageItem(){}
+    /**
+     * Utility function that computes the expected damage of an item.
+     * This factors in the current buffs active on this SimulatedShip instance.
+     * Note that this may be slightly flawed, and items that deal damage over time like aggrobeacons,
+     * thermoblasts or droids will be shown as total damage dealt for the cast.
+     * 
+     * @returns A number, representing the amount of damage using this item would result in.
+     * */
+    computeDamageHeuristic(item){
+        if (!isDamageDealer(item)) return 0;
+
+    }
+
+    getHighestDamageItem(){
+        // TODO
+    }
 
     /** Predicate that returns true if this SimualtedShip instance has at least 1 buffing item it can use */
     hasBuffToUse(){
+        // TODO
         return false;
     }
     
-    /** Predicate that returns true if the given item is a combat useful buff. */
+    /** Predicate that returns true if the given item is a combat useful, damage enhancing buff. */
     static isBuff(item){
-        return false;
+        var listOfBuffs = [
+            "aim",
+            "taunt",
+            "speedbuff",
+            "attackbuff",
+            "attackturret"
+        ];
+        return listOfBuffs.includes(item.type);
     }
 
     /** Predicate that returns true if the given item will deal damage upon using it against a target. */
     static isDamageDealer(item){
-        return false;
+        var listOfBuffs = [
+            "blaster",
+            "rocket",
+            "timedamage",
+            "bomb",
+            "aggrobeacon",
+            "sniperblaster",
+            "attackdroid",
+            "orbitalstrike",
+            "stickybomb",
+            "mine",
+            "lightningchain"
+        ];
+        return listOfBuffs.includes(item.type);
     }
+
 }
 
 /* ----- Export functions below ----- */
@@ -115,7 +153,11 @@ let DATASET_SHIPS = null
 let DATASET_SYSTEMS = null
 
 /**
+ * Loads the datasets containing actual pirate galaxy game data into this library.
+ * At least three datasets must be loaded: Ships, Items and Systems.
+ * The javascript object (JSON notation) to give to this function may be founf in the GalacticBlueprint repository.
  * 
+ * @throws Error --- If the dataset is malformed, or no dataset was given
  */
 export function loadDataset(dataset) {
     if (!dataset) throw new Error("No dataset was given, ignored the load attempt.");
@@ -137,10 +179,44 @@ export function loadDataset(dataset) {
 }
 
 /**
+ * Utility function to create a list of representative ship presets.
  * 
+ * @returns An array of ship presets, ready for input in the computeProfile() fonctions.
+ * 
+ * @throws Error --- If the loadDataset() function has not been called, or failed to load.
+ * May also throw an error if the dataset version is out of sync with this library version, as it may try to create presets with items that no longer exist.
  */
 export function fetchPresets() {
+    var shipPresets = [];
+    if (DATASET_ITEMS == null) throw new Error(`Items dataset was not loaded properly, failed to generate and serve presets.`);
+    if (DATASET_SHIPS == null) throw new Error(`Ships dataset was not loaded properly, failed to generate and serve presets.`);
+    if (DATASET_SYSTEMS == null) throw new Error(`Systems dataset was not loaded properly, failed to generate and serve presets.`);
 
+    // For each ship raw out of the dataset, creates a full loadout with specific items and drones.
+    for (const rawShip of DATASET_SHIPS.data.entries){
+        // Skip custom classes in the dataset, these are most likely technical items
+        if(rawShip.class === "custom") continue;
+        // Build a default ship loadout
+        var shipLoadout = {
+            name: rawShip.name,
+            class: rawShip.class,
+            speed: rawShip.speed
+        };
+        // Equip a default armor, usually the best available
+        // TODO : smarter handling of sirius and vega here, probably.
+        shipLoadout.armor = rawShip.armors.at(-1);
+        delete shipLoadout.armor.price;
+        // Equip weapons based on the ship's class and armor level
+        var shipclass = DATASET_SHIPS.data.classes.find(c => c.name === rawShip.class);
+        shipLoadout.items = [];
+        for(var itemslot of shipclass.entries){
+            // TODO: add items here
+            //shipLoadout.items.push();
+        }
+        // Add the newly built loadout to the default presets
+        shipPresets.push(shipLoadout);
+    }
+    return shipPresets;
 }
 
 /**
@@ -172,10 +248,10 @@ export function computeProfile(ship, duration, enemiesCount, algo) {
     if (!DATASET_SHIPS) throw new Error("Ships dataset is not loaded.");
     if (!DATASET_SYSTEMS) throw new Error("System dataset is not loaded.");
 
-    computedDamage = profileDamage(ship, duration, enemiesCount, algo)
-    computedTankyness = profileTankyness(ship)
-    computedMobility = profileMobility(ship)
-    computedValidity = profileValidity(ship)
+    var computedDamage = profileDamage(ship, duration, enemiesCount, algo)
+    var computedTankyness = profileTankyness(ship)
+    var computedMobility = profileMobility(ship)
+    var computedValidity = profileValidity(ship)
 
     return { damage: computedDamage, tankyness: computedTankyness, mobility: computedMobility, validity: computedValidity }
 }
