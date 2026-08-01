@@ -143,14 +143,31 @@ class SimulatedShip{
 
 }
 
+/**
+ * Utility function to get the matching system object from a given level
+ * 
+ * @returns The first system object from the given system dataset where the given level would be allowed.
+ * Returns null  if no system was found.
+ * 
+ * @throws Error If the given dataset is not a system dataset.
+ * */
+function utils_getSystem(level, dataset){
+    if(!dataset.dataset || dataset.dataset !== "systems")
+        throw new Error("Tried to match a level to a system, but the system dataset was malformed!");
+    for(var system of dataset.data){
+        if(level >= system.minlevel && level <= system.maxlevel) return system;
+    }
+    return null;
+}
+
 /* ----- Export functions below ----- */
 
 /** Global static instance of the items dataset used for all computations */
-let DATASET_ITEMS = null
+let DATASET_ITEMS = null;
 /** Global static instance of the ships dataset used for all computations */
-let DATASET_SHIPS = null
+let DATASET_SHIPS = null;
 /** Global static instance of the systems dataset used for all computations */
-let DATASET_SYSTEMS = null
+let DATASET_SYSTEMS = null;
 
 /**
  * Loads the datasets containing actual pirate galaxy game data into this library.
@@ -194,7 +211,7 @@ export function fetchPresets() {
 
     // For each ship raw out of the dataset, creates a full loadout with specific items and drones.
     for (const rawShip of DATASET_SHIPS.data.entries){
-        // Skip custom classes in the dataset, these are most likely technical items
+        // skip custom classes
         if(rawShip.class === "custom") continue;
         // Build a default ship loadout
         var shipLoadout = {
@@ -206,12 +223,24 @@ export function fetchPresets() {
         // TODO : smarter handling of sirius and vega here, probably.
         shipLoadout.armor = rawShip.armors.at(-1);
         delete shipLoadout.armor.price;
-        // Equip weapons based on the ship's class and armor level
+        // Fetch the ship's estimated system and class info
+        var shipSystem = utils_getSystem(shipLoadout.armor.level, DATASET_SYSTEMS);
+        if(shipSystem === undefined) continue;
         var shipclass = DATASET_SHIPS.data.classes.find(c => c.name === rawShip.class);
+        if(shipclass === undefined) continue;
         shipLoadout.items = [];
-        for(var itemslot of shipclass.entries){
-            // TODO: add items here
-            //shipLoadout.items.push();
+        // Heuristically fetch the best item for each item slot of the ship's class
+        for(var itemslot of shipclass.items){
+            var itemsCollection = DATASET_ITEMS.data[itemslot].entries;
+            var selectedItem = null;
+            for (var i = itemsCollection.length - 1; i >= 0; i--) {
+                if(itemsCollection[i].name.includes("conquest")) continue;
+                if(itemsCollection[i].level <= shipSystem.maxlevel) {
+                    selectedItem = itemsCollection[i]
+                    break;
+                }
+            }
+            if(selectedItem) shipLoadout.items.push(selectedItem);
         }
         // Add the newly built loadout to the default presets
         shipPresets.push(shipLoadout);
