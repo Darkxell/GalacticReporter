@@ -223,14 +223,15 @@ export function fetchPresets() {
         // TODO : smarter handling of sirius and vega here, probably.
         shipLoadout.armor = rawShip.armors.at(-1);
         delete shipLoadout.armor.price;
-        // Fetch the ship's estimated system and class info
+        // Fetch the ship's estimated system and list of items
         var shipSystem = utils_getSystem(shipLoadout.armor.level, DATASET_SYSTEMS);
         if (shipSystem === undefined) continue;
         var shipclass = DATASET_SHIPS.data.classes.find(c => c.name === rawShip.class);
         if (shipclass === undefined) continue;
         shipLoadout.items = [];
+        var expectedItemset = shipclass.items.slice(0, -rawShip.itempenalty);
         // Heuristically fetch the best item for each item slot of the ship's class
-        for (var itemslot of shipclass.items) {
+        for (var itemslot of expectedItemset) {
             var itemsCollection = DATASET_ITEMS.data[itemslot].entries;
             var selectedItem = null;
             for (var i = itemsCollection.length - 1; i >= 0; i--) {
