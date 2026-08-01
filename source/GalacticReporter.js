@@ -64,10 +64,10 @@ function profileValidity(ship) { //TODO
 * Instance of a ship in combat.
 * Contains current information of a simulated ship's state, such as current active buffs or cooldowns.
 */
-class SimulatedShip{
+class SimulatedShip {
     // Builds a new SimulatedShip given a static image of a loadout.
     // Exemples of this structure may be returned from fetchPresets().
-    constructor(ship){
+    constructor(ship) {
         // Structure containing all needed static data about the ship instance
         // This is a ship loadout, not a raw hull from the dataset.
         this.ship = ship;
@@ -76,18 +76,18 @@ class SimulatedShip{
         this.gcd = 0;
         // Dictionnary of cooldowns for the different items 
         var itemcooldowns = [];
-        for(item of ship.items){
-             itemcooldowns.append({item : item, cooldown : 0});
+        for (item of ship.items) {
+            itemcooldowns.append({ item: item, cooldown: 0 });
         }
         this.itemcooldowns = itemcooldowns;
     }
 
     /** Advances time for this simulated ship by the given amount, in seconds. */
-    tick(ticktime){
+    tick(ticktime) {
         this.gcd -= ticktime;
         if (this.gcd < 0) this.gcd = 0;
     }
-    
+
     /**
      * Utility function that computes the expected damage of an item.
      * This factors in the current buffs active on this SimulatedShip instance.
@@ -96,49 +96,19 @@ class SimulatedShip{
      * 
      * @returns A number, representing the amount of damage using this item would result in.
      * */
-    computeDamageHeuristic(item){
-        if (!isDamageDealer(item)) return 0;
+    computeDamageHeuristic(item) {
+        if (!utils_isDamageDealer(item)) return 0;
 
     }
 
-    getHighestDamageItem(){
+    getHighestDamageItem() {
         // TODO
     }
 
     /** Predicate that returns true if this SimualtedShip instance has at least 1 buffing item it can use */
-    hasBuffToUse(){
+    hasBuffToUse() {
         // TODO
         return false;
-    }
-    
-    /** Predicate that returns true if the given item is a combat useful, damage enhancing buff. */
-    static isBuff(item){
-        var listOfBuffs = [
-            "aim",
-            "taunt",
-            "speedbuff",
-            "attackbuff",
-            "attackturret"
-        ];
-        return listOfBuffs.includes(item.type);
-    }
-
-    /** Predicate that returns true if the given item will deal damage upon using it against a target. */
-    static isDamageDealer(item){
-        var listOfBuffs = [
-            "blaster",
-            "rocket",
-            "timedamage",
-            "bomb",
-            "aggrobeacon",
-            "sniperblaster",
-            "attackdroid",
-            "orbitalstrike",
-            "stickybomb",
-            "mine",
-            "lightningchain"
-        ];
-        return listOfBuffs.includes(item.type);
     }
 
 }
@@ -151,13 +121,43 @@ class SimulatedShip{
  * 
  * @throws Error If the given dataset is not a system dataset.
  * */
-function utils_getSystem(level, dataset){
-    if(!dataset.dataset || dataset.dataset !== "systems")
+function utils_getSystem(level, dataset) {
+    if (!dataset.dataset || dataset.dataset !== "systems")
         throw new Error("Tried to match a level to a system, but the system dataset was malformed!");
-    for(var system of dataset.data){
-        if(level >= system.minlevel && level <= system.maxlevel) return system;
+    for (var system of dataset.data) {
+        if (level >= system.minlevel && level <= system.maxlevel) return system;
     }
     return null;
+}
+
+/** Predicate that returns true if the given item is a combat useful, damage enhancing buff. */
+function utils_isBuff(item) {
+    var listOfBuffs = [
+        "aim",
+        "taunt",
+        "speedbuff",
+        "attackbuff",
+        "attackturret"
+    ];
+    return listOfBuffs.includes(item.type);
+}
+
+/** Predicate that returns true if the given item will deal damage upon using it against a target. */
+function utils_isDamageDealer(item) {
+    var listOfBuffs = [
+        "blaster",
+        "rocket",
+        "timedamage",
+        "bomb",
+        "aggrobeacon",
+        "sniperblaster",
+        "attackdroid",
+        "orbitalstrike",
+        "stickybomb",
+        "mine",
+        "lightningchain"
+    ];
+    return listOfBuffs.includes(item.type);
 }
 
 /* ----- Export functions below ----- */
@@ -210,9 +210,9 @@ export function fetchPresets() {
     if (DATASET_SYSTEMS == null) throw new Error(`Systems dataset was not loaded properly, failed to generate and serve presets.`);
 
     // For each ship raw out of the dataset, creates a full loadout with specific items and drones.
-    for (const rawShip of DATASET_SHIPS.data.entries){
+    for (const rawShip of DATASET_SHIPS.data.entries) {
         // skip custom classes
-        if(rawShip.class === "custom") continue;
+        if (rawShip.class === "custom") continue;
         // Build a default ship loadout
         var shipLoadout = {
             name: rawShip.name,
@@ -225,22 +225,22 @@ export function fetchPresets() {
         delete shipLoadout.armor.price;
         // Fetch the ship's estimated system and class info
         var shipSystem = utils_getSystem(shipLoadout.armor.level, DATASET_SYSTEMS);
-        if(shipSystem === undefined) continue;
+        if (shipSystem === undefined) continue;
         var shipclass = DATASET_SHIPS.data.classes.find(c => c.name === rawShip.class);
-        if(shipclass === undefined) continue;
+        if (shipclass === undefined) continue;
         shipLoadout.items = [];
         // Heuristically fetch the best item for each item slot of the ship's class
-        for(var itemslot of shipclass.items){
+        for (var itemslot of shipclass.items) {
             var itemsCollection = DATASET_ITEMS.data[itemslot].entries;
             var selectedItem = null;
             for (var i = itemsCollection.length - 1; i >= 0; i--) {
-                if(itemsCollection[i].name.includes("conquest")) continue;
-                if(itemsCollection[i].level <= shipSystem.maxlevel) {
+                if (itemsCollection[i].name.includes("conquest")) continue;
+                if (itemsCollection[i].level <= shipSystem.maxlevel) {
                     selectedItem = itemsCollection[i]
                     break;
                 }
             }
-            if(selectedItem) shipLoadout.items.push(selectedItem);
+            if (selectedItem) shipLoadout.items.push(selectedItem);
         }
         // Add the newly built loadout to the default presets
         shipPresets.push(shipLoadout);
