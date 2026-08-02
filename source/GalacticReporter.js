@@ -7,41 +7,26 @@
  * This software is in no way related to Splitscreen Studios GMBH
  */
 
-/**
- * Predicate function to verify the integrity of arguments passed to the ``computeProfile()`` method are correct.
- * 
- * @return A status object containing an integer ``status.code`` and a string ``status.message``.
- */
-function verifyInputs(ship, duration, enemiesCount, algo) {
-    // Verify duration correctness
-    if (duration === undefined) return { code: 1, message: "No duration parameter was given." };
-    if (!Number.isInteger(duration)) return { code: 1, message: "Given duration parameter is not an integer number." };
-    if (duration < 1) return { code: 1, message: "Given duration parameter needs to be at least one second." };
-    if (duration > 36000) return { code: 1, message: "Given duration parameter can't go above 10 hours, or 36000 seconds." };
-    // Verify enemy count correctness
-    if (enemiesCount === undefined) return { code: 1, message: "No enemiesCount parameter was given." };
-    if (!Number.isInteger(enemiesCount)) return { code: 1, message: "Given enemiesCount parameter is not an integer number." };
-    if (enemiesCount < 1) return { code: 1, message: "Given enemiesCount parameter needs to be at least one." };
-    if (enemiesCount > 36000) return { code: 1, message: "Given enemiesCount parameter can't go above 1000." };
-    // Verify ship structure correctness
-    // TODO
-    // No errors fallback
-    return { code: 0, message: "Inputs are complete." }
-}
+/** Duration of a game tick, in seconds */
+let TICKTIME = 1 / 60;
 
-function profileDamage(ship, duration, enemiesCount, algo) { //TODO
-    // Exemple of a simulation on for 10 seconds, dealing a total of 950 dmg
-    var simulationResult = {
-        totalDamage: 950, graph: [
-            { time: 1, damage: 100, item: "$blaster.fusion32" },
-            { time: 2, damage: 200, item: "$blaster.fusion32" },
-            { time: 4, damage: 450, item: "$rocket.32" },
-            { time: 5, damage: 550, item: "$blaster.fusion32" },
-            { time: 6, damage: 650, item: "$blaster.fusion32" },
-            { time: 7, damage: 750, item: "$blaster.fusion32" },
-            { time: 8, damage: 850, item: "$blaster.fusion32" },
-            { time: 9, damage: 950, item: "$blaster.fusion32" }]
-    };
+function profileDamage(ship, duration, enemiesCount, algo) {
+    let simulationResult = { totalDamage: 0, graph: [] };
+    let simulation = new SimulatedShip(ship);
+    for (let i = 0; i <= duration; i += TICKTIME) {
+        // Advance the game tick and compute cooldowns
+        simulation.tick(TICKTIME);
+        if (simulation.gcd > 0) continue;
+        // GCD is down, choose an item to use
+        let itemToUse = simulation.getHighestDamageItem();
+        if (!itemToUse) continue;
+        let dealtDamageThisTick = simulation.useItem(itemToUse.name);
+        simulationResult.totalDamage += dealtDamageThisTick;
+        simulationResult.graph.push({ time: Math.trunc(i * 100) / 100, damage: simulationResult.totalDamage, item: itemToUse.name });
+    }
+
+
+
     return simulationResult;
 }
 
@@ -61,56 +46,26 @@ function profileValidity(ship) { //TODO
 /* ----- Utility runtime classes ----- */
 
 /**
-* Instance of a ship in combat.
-* Contains current information of a simulated ship's state, such as current active buffs or cooldowns.
-*/
-class SimulatedShip {
-    // Builds a new SimulatedShip given a static image of a loadout.
-    // Exemples of this structure may be returned from fetchPresets().
-    constructor(ship) {
-        // Structure containing all needed static data about the ship instance
-        // This is a ship loadout, not a raw hull from the dataset.
-        this.ship = ship;
-        // Amount of time in which the ship will be able to take its next action, in seconds.
-        // This may lower faster than real time if the ship is afflicted by a speed actuator
-        this.gcd = 0;
-        // Dictionnary of cooldowns for the different items 
-        var itemcooldowns = [];
-        for (item of ship.items) {
-            itemcooldowns.append({ item: item, cooldown: 0 });
-        }
-        this.itemcooldowns = itemcooldowns;
-    }
-
-    /** Advances time for this simulated ship by the given amount, in seconds. */
-    tick(ticktime) {
-        this.gcd -= ticktime;
-        if (this.gcd < 0) this.gcd = 0;
-    }
-
-    /**
-     * Utility function that computes the expected damage of an item.
-     * This factors in the current buffs active on this SimulatedShip instance.
-     * Note that this may be slightly flawed, and items that deal damage over time like aggrobeacons,
-     * thermoblasts or droids will be shown as total damage dealt for the cast.
-     * 
-     * @returns A number, representing the amount of damage using this item would result in.
-     * */
-    computeDamageHeuristic(item) {
-        if (!utils_isDamageDealer(item)) return 0;
-
-    }
-
-    getHighestDamageItem() {
-        // TODO
-    }
-
-    /** Predicate that returns true if this SimualtedShip instance has at least 1 buffing item it can use */
-    hasBuffToUse() {
-        // TODO
-        return false;
-    }
-
+ * Predicate function to verify the integrity of arguments passed to the ``computeProfile()`` method are correct.
+ * 
+ * @return A status object containing an integer ``status.code`` and a string ``status.message``.
+ */
+function utils_verifyInputs(ship, duration, enemiesCount, algo) {
+    // Verify duration correctness
+    if (duration === undefined) return { code: 1, message: "No duration parameter was given." };
+    if (!Number.isInteger(duration)) return { code: 1, message: "Given duration parameter is not an integer number." };
+    if (duration < 1) return { code: 1, message: "Given duration parameter needs to be at least one second." };
+    if (duration > 36000) return { code: 1, message: "Given duration parameter can't go above 10 hours, or 36000 seconds." };
+    // Verify enemy count correctness
+    if (enemiesCount === undefined) return { code: 1, message: "No enemiesCount parameter was given." };
+    if (!Number.isInteger(enemiesCount)) return { code: 1, message: "Given enemiesCount parameter is not an integer number." };
+    if (enemiesCount < 1) return { code: 1, message: "Given enemiesCount parameter needs to be at least one." };
+    if (enemiesCount > 1000) return { code: 1, message: "Given enemiesCount parameter can't go above 1000." };
+    // Verify ship structure correctness
+    // TODO
+    // TODO : don't forget to verify that all items have a "type" field appended!
+    // No errors fallback
+    return { code: 0, message: "Inputs are complete." }
 }
 
 /**
@@ -130,8 +85,12 @@ function utils_getSystem(level, dataset) {
     return null;
 }
 
-/** Predicate that returns true if the given item is a combat useful, damage enhancing buff. */
-function utils_isBuff(item) {
+/** 
+ * Predicate that returns true if the given item is a combat useful, damage enhancing buff. 
+ * 
+ *  * @param itemName the name of the item type to check
+*/
+function utils_isBuff(itemName) {
     var listOfBuffs = [
         "aim",
         "taunt",
@@ -139,12 +98,16 @@ function utils_isBuff(item) {
         "attackbuff",
         "attackturret"
     ];
-    return listOfBuffs.includes(item.type);
+    return listOfBuffs.includes(itemName);
 }
 
-/** Predicate that returns true if the given item will deal damage upon using it against a target. */
-function utils_isDamageDealer(item) {
-    var listOfBuffs = [
+/** 
+ * Predicate that returns true if the given item will deal damage upon using it against a target.
+ * 
+ * @param itemName the name of the item type to check
+ * */
+function utils_isDamageDealer(itemName) {
+    var listOfDamageItems = [
         "blaster",
         "rocket",
         "timedamage",
@@ -157,7 +120,146 @@ function utils_isDamageDealer(item) {
         "mine",
         "lightningchain"
     ];
-    return listOfBuffs.includes(item.type);
+    return listOfDamageItems.includes(itemName);
+}
+
+/** 
+ * Utility function to compute how much damage an item does.
+ * Note that this function does NOT factor in accuracy, buffs or crits, it is only a normalized
+ * power computation function to normalise damage per cast.
+ * 
+ * @param item structure, must have a type attribute set
+ * 
+ * @return How much damage potential using this item has. For most items, this is equal to their power,
+ * but it may be different for damage over time items, or items that spawns an entity.
+ */
+function utils_computeUnbuffedDamage(item) {
+    // TODO : add attack droid here, somehow
+    switch (item.type) {
+        case "blaster":
+        case "rocket":
+        case "bomb":
+        case "sniperblaster":
+        case "orbitalstrike":
+        case "stickybomb":
+        case "mine":
+        case "lightningchain":
+            return item.power;
+        case "timedamage":
+            return item.power * Math.ceil(item.active);
+        case "aggrobeacon":
+            return item.power * item.active;
+        default:
+            return 0;
+    }
+}
+
+/**
+* Instance of a ship in combat.
+* Contains current information of a simulated ship's state, such as current active buffs or cooldowns.
+*/
+class SimulatedShip {
+    // Builds a new SimulatedShip given a static image of a loadout.
+    // Exemples of this structure may be returned from fetchPresets().
+    constructor(ship) {
+        // Structure containing all needed static data about the ship instance
+        // This is a ship loadout, not a raw hull from the dataset.
+        this.ship = ship;
+        // Amount of time in which the ship will be able to take its next action, in seconds.
+        // This may lower faster than real time if the ship is afflicted by a speed actuator
+        this.gcd = 0;
+        // Dictionnary of cooldowns for the different items 
+        var itemcooldowns = [];
+        for (var item of ship.items) {
+            itemcooldowns.push({ item: item, cooldown: 0 });
+        }
+        this.itemcooldowns = itemcooldowns;
+    }
+
+    /** Advances time for this simulated ship by the given amount, in seconds. */
+    tick(ticktime) {
+        this.gcd -= ticktime;
+        if (this.gcd < 0) this.gcd = 0;
+        for (var item of this.itemcooldowns) {
+            item.cooldown -= ticktime;
+            if (item.cooldown < 0) item.cooldown = 0;
+        }
+    }
+
+    /** 
+     * Asks this SimulatedShip instance to use the given item.
+     * The item must be part of the 
+     * 
+     * @param itemName the name of the item to use, should be part of this ship's itemset.
+     * 
+     * @returns How much damage using the item actually resulted in.
+     * Will return 0 if the item could not be used
+     * (if it is in cooldown, not found , or of gcd is up...)
+    */
+    useItem(itemName) {
+        // Find the equipped item on this ship
+        let itemLocale = this.itemcooldowns.find(e => e.item.name === itemName);
+        if (!itemLocale) return 0;
+        if (itemLocale.cooldown > 0) return 0;
+        // GCD check and compute
+        if (this.gcd > 0) return 0;
+        this.gcd = 1.5;
+        // If the item is a buff, apply the buff and put it on cooldown
+        if (utils_isBuff(itemLocale.item.type)) {
+            itemLocale.cooldown = itemLocale.item.cooldown;
+            return 0;
+        }
+        // If the item deals damage, compute how much it deals and put it on cooldown
+        if (utils_isDamageDealer(itemLocale.item.type)) {
+            itemLocale.cooldown = itemLocale.item.cooldown;
+            return this.computeDamageHeuristic(itemLocale.item);
+        }
+        // If it's a useless item, just put it on cooldown and move on
+        itemLocale.cooldown = itemLocale.item.cooldown;
+        return 0;
+    }
+
+    /**
+     * Utility function that computes the expected damage of an item.
+     * This factors in the current buffs active on this SimulatedShip instance.
+     * Note that this may be slightly flawed, and items that deal damage over time like aggrobeacons,
+     * thermoblasts or droids will be shown as total damage dealt for the cast.
+     * 
+     * @returns A number, representing the amount of damage using this item would result in.
+     * */
+    computeDamageHeuristic(item) {
+        if (!utils_isDamageDealer(item.type)) return 0;
+        let rawItemDamage = utils_computeUnbuffedDamage(item);
+        // TODO : actually compute damage here!
+        return rawItemDamage;
+    }
+
+    /**
+     * Utility function that returns the highest damage useable item on this ship.
+     * Will skip any item that is currently on cooldown.
+     * Will always return a damaging item, or null if nothing is able to deal damage.
+     */
+    getHighestDamageItem() {
+        let bestItem = null;
+        let highestDamage = -Infinity;
+        for (const itemLocale of this.itemcooldowns) {
+            if (itemLocale.cooldown > 0) continue;
+            if (!utils_isDamageDealer(itemLocale.item.type)) continue;
+            const damage = this.computeDamageHeuristic(itemLocale.item);
+            if (damage > highestDamage) {
+                highestDamage = damage;
+                bestItem = itemLocale.item;
+            }
+        }
+        return bestItem;
+    }
+
+    /** Predicate that returns true if this SimualtedShip instance has at least 1 buffing item it can use */
+    hasBuffToUse() {
+        // TODO
+        return false;
+    }
+
 }
 
 /* ----- Export functions below ----- */
@@ -205,9 +307,9 @@ export function loadDataset(dataset) {
  */
 export function fetchPresets() {
     var shipPresets = [];
-    if (DATASET_ITEMS == null) throw new Error(`Items dataset was not loaded properly, failed to generate and serve presets.`);
-    if (DATASET_SHIPS == null) throw new Error(`Ships dataset was not loaded properly, failed to generate and serve presets.`);
-    if (DATASET_SYSTEMS == null) throw new Error(`Systems dataset was not loaded properly, failed to generate and serve presets.`);
+    if (DATASET_ITEMS === null) throw new Error(`Items dataset was not loaded properly, failed to generate and serve presets.`);
+    if (DATASET_SHIPS === null) throw new Error(`Ships dataset was not loaded properly, failed to generate and serve presets.`);
+    if (DATASET_SYSTEMS === null) throw new Error(`Systems dataset was not loaded properly, failed to generate and serve presets.`);
 
     // For each ship raw out of the dataset, creates a full loadout with specific items and drones.
     for (const rawShip of DATASET_SHIPS.data.entries) {
@@ -241,7 +343,10 @@ export function fetchPresets() {
                     break;
                 }
             }
-            if (selectedItem) shipLoadout.items.push(selectedItem);
+            if (selectedItem) {
+                selectedItem.type = itemslot;
+                shipLoadout.items.push(selectedItem);
+            }
         }
         // Add the newly built loadout to the default presets
         shipPresets.push(shipLoadout);
@@ -271,7 +376,7 @@ export function fetchPresets() {
  * Note that this library needs to be initialized with data from the game, this function will also throw an error if a dataset is missing.
  */
 export function computeProfile(ship, duration, enemiesCount, algo) {
-    var status = verifyInputs(ship, duration, enemiesCount, algo);
+    var status = utils_verifyInputs(ship, duration, enemiesCount, algo);
     if (status.code !== 0) throw new Error(status.message);
 
     if (!DATASET_ITEMS) throw new Error("Item dataset is not loaded.");

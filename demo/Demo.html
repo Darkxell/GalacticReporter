@@ -24,11 +24,14 @@
                 console.log("Ship presets :");
                 console.log(presets);
 
-                var ship = {};
+                // For demo purposes, we just take the last ship in the presets
+                var ship = presets.at(-1);
 
                 // Compute the damage profile for the ship we just made
+                // 60 seconds, 1 ennemy
                 const profile = computeProfile(ship, 60, 1);
-                console.log("computeProfile() returned:", profile);
+                console.log("Computed damage profile :");
+                console.log(profile);
 
             } catch (err) {
                 console.error("Galactic reporter demo failed.\n", err);
