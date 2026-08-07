@@ -21,11 +21,10 @@ export class SimulatedShip {
         // This may lower faster than real time if the ship is afflicted by a speed actuator
         this.gcd = 0;
         // Dictionnary of cooldowns for the different items 
-        var itemcooldowns = [];
-        for (var item of ship.items) {
-            itemcooldowns.push({ item: item, cooldown: 0 });
+        this.itemcooldowns = [];
+        for (let item of ship.items) {
+            this.itemcooldowns.push({ item: item, cooldown: 0 });
         }
-        this.itemcooldowns = itemcooldowns;
         // Array of buffs this ship has.
         // Each buff has the following structure : {type, strength, duration, source}
         // duration is in seconds, strength is a percentage
