@@ -34,7 +34,7 @@ export function utils_verifyInputs(ship, duration, enemiesCount, algo) {
 export function utils_getSystem(level, dataset) {
     if (!dataset.dataset || dataset.dataset !== "systems")
         throw new Error("Tried to match a level to a system, but the system dataset was malformed!");
-    for (var system of dataset.data) {
+    for (let system of dataset.data) {
         if (level >= system.minlevel && level <= system.maxlevel) return system;
     }
     return null;
@@ -46,7 +46,7 @@ export function utils_getSystem(level, dataset) {
  *  * @param itemName the name of the item type to check
 */
 export function utils_isBuff(itemName) {
-    var listOfBuffs = [
+    let listOfBuffs = [
         "aim",
         "taunt",
         "speedbuff",
@@ -62,7 +62,7 @@ export function utils_isBuff(itemName) {
  * @param itemName the name of the item type to check
  * */
 export function utils_isDamageDealer(itemName) {
-    var listOfDamageItems = [
+    let listOfDamageItems = [
         "blaster",
         "rocket",
         "timedamage",
