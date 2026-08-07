@@ -43,7 +43,7 @@ function profileTankyness(ship) { // TODO
 }
 
 function profileMobility(ship) {// TODO
-    var maxSpeed = ship.speed;
+    let maxSpeed = ship.speed;
     return { totalTravel: 150000, topSpeed: maxSpeed };
 }
 
@@ -95,7 +95,7 @@ export function loadDataset(dataset) {
  * May also throw an error if the dataset version is out of sync with this library version, as it may try to create presets with items that no longer exist.
  */
 export function fetchPresets() {
-    var shipPresets = [];
+    let shipPresets = [];
     if (DATASET_ITEMS === null) throw new Error(`Items dataset was not loaded properly, failed to generate and serve presets.`);
     if (DATASET_SHIPS === null) throw new Error(`Ships dataset was not loaded properly, failed to generate and serve presets.`);
     if (DATASET_SYSTEMS === null) throw new Error(`Systems dataset was not loaded properly, failed to generate and serve presets.`);
@@ -105,7 +105,7 @@ export function fetchPresets() {
         // skip custom classes
         if (rawShip.class === "custom") continue;
         // Build a default ship loadout
-        var shipLoadout = {
+        let shipLoadout = {
             name: rawShip.name,
             class: rawShip.class,
             speed: rawShip.speed
@@ -115,17 +115,17 @@ export function fetchPresets() {
         shipLoadout.armor = rawShip.armors.at(-1);
         delete shipLoadout.armor.price;
         // Fetch the ship's estimated system and list of items
-        var shipSystem = utils_getSystem(shipLoadout.armor.level, DATASET_SYSTEMS);
+        let shipSystem = utils_getSystem(shipLoadout.armor.level, DATASET_SYSTEMS);
         if (shipSystem === undefined) continue;
-        var shipclass = DATASET_SHIPS.data.classes.find(c => c.name === rawShip.class);
+        let shipclass = DATASET_SHIPS.data.classes.find(c => c.name === rawShip.class);
         if (shipclass === undefined) continue;
         shipLoadout.items = [];
-        var expectedItemset = shipclass.items.slice(0, -rawShip.itempenalty);
+        let expectedItemset = shipclass.items.slice(0, -rawShip.itempenalty);
         // Heuristically fetch the best item for each item slot of the ship's class
-        for (var itemslot of expectedItemset) {
-            var itemsCollection = DATASET_ITEMS.data[itemslot].entries;
-            var selectedItem = null;
-            for (var i = itemsCollection.length - 1; i >= 0; i--) {
+        for (let itemslot of expectedItemset) {
+            let itemsCollection = DATASET_ITEMS.data[itemslot].entries;
+            let selectedItem = null;
+            for (let i = itemsCollection.length - 1; i >= 0; i--) {
                 if (itemsCollection[i].name.includes("conquest")) continue;
                 if (itemsCollection[i].level <= shipSystem.maxlevel) {
                     selectedItem = itemsCollection[i]
@@ -165,17 +165,17 @@ export function fetchPresets() {
  * Note that this library needs to be initialized with data from the game, this function will also throw an error if a dataset is missing.
  */
 export function computeProfile(ship, duration, enemiesCount, algo) {
-    var status = utils_verifyInputs(ship, duration, enemiesCount, algo);
+    let status = utils_verifyInputs(ship, duration, enemiesCount, algo);
     if (status.code !== 0) throw new Error(status.message);
 
     if (!DATASET_ITEMS) throw new Error("Item dataset is not loaded.");
     if (!DATASET_SHIPS) throw new Error("Ships dataset is not loaded.");
     if (!DATASET_SYSTEMS) throw new Error("System dataset is not loaded.");
 
-    var computedDamage = profileDamage(ship, duration, enemiesCount, algo)
-    var computedTankyness = profileTankyness(ship)
-    var computedMobility = profileMobility(ship)
-    var computedValidity = profileValidity(ship)
+    let computedDamage = profileDamage(ship, duration, enemiesCount, algo)
+    let computedTankyness = profileTankyness(ship)
+    let computedMobility = profileMobility(ship)
+    let computedValidity = profileValidity(ship)
 
     return { damage: computedDamage, tankyness: computedTankyness, mobility: computedMobility, validity: computedValidity }
 }
