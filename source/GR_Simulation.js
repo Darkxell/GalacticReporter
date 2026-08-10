@@ -47,6 +47,34 @@ export class SimulatedShip {
         this.buffs = this.buffs.filter(b => b.duration <= 0);
     }
 
+	/**
+     * Apply a buff to this ship simulation based on the given item.
+     * 
+     * @param itemName the name of the item to use, should be part of this ship's itemset.
+     * 
+     * @returns How much damage using the item actually resulted in.
+     * Will return 0 if the item could not be used
+     * (if it is in cooldown, not found , or of gcd is up...)
+    */
+	applyBuffFromItem(item) {
+		// TODO : compute level differences for item scaling here
+		switch (item.type) {
+            case "aim":
+				this.buffs.push( {type : "critical", strength : item.critical, duration : item.active, source : item.name} );
+				this.buffs.push( {type : "accuracy", strength : item.accuracy, duration : item.active, source : item.name} );
+				break;
+			case "taunt":
+				// TODO : how do we handle this?
+				break;
+			case "speedbuff":
+				break;
+			case "attackbuff":
+				break;
+			case "attackturret":
+				break;
+		}
+	}
+
     /** 
     * Returns the total amount a stat of this ship is buffed by. 
     *
@@ -91,7 +119,7 @@ export class SimulatedShip {
     
     /** 
      * Asks this SimulatedShip instance to use the given item.
-     * The item must be part of the 
+     * The item must be part of the ship's equipped items, or it will just do nothing.
      * 
      * @param itemName the name of the item to use, should be part of this ship's itemset.
      * 
@@ -128,13 +156,23 @@ export class SimulatedShip {
      * Note that this may be slightly flawed, and items that deal damage over time like aggrobeacons,
      * thermoblasts or droids will be shown as total damage dealt for the cast.
      * 
+	 * @param item An item instance, usually from the itemcooldowns[i].item attribute of this object
+	 *
      * @returns A number, representing the amount of damage using this item would result in.
      * */
     computeDamageHeuristic(item) {
         if (!utils_isDamageDealer(item.type)) return 0;
         let rawItemDamage = utils_computeUnbuffedDamage(item);
-        // TODO : actually compute damage here!
-        return rawItemDamage;
+        // Normalise the actual damage with damage buffs
+		let buffedDamage = rawItemDamage * getTotalBuffValue("damage");
+		// Factor in critical strikes
+		let critChance = (item.critical ?? 0) + getTotalBuffValue("critical");
+		buffedDamage = buffedDamage + (buffedDamage * critChance / 2);
+		// Nerf related to accuracy
+		let effectiveAccuracy = ( 90 + (item.accuracy ?? 0) + getTotalBuffValue("accuracy") ) / 100;
+		effectiveAccuracy = effectiveAccuracy >= 1 ? 1 : effectiveAccuracy;
+		buffedDamage = buffedDamage * effectiveAccuracy;
+        return buffedDamage;
     }
 
     /**
