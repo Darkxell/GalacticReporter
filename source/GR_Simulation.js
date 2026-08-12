@@ -114,6 +114,7 @@ export class SimulatedShip {
                     return 1;
             }
         }
+        console.log("Computed total buff value for " + type + " : " + scalar);
         return scalar;
     }
     
@@ -163,15 +164,18 @@ export class SimulatedShip {
     computeDamageHeuristic(item) {
         if (!utils_isDamageDealer(item.type)) return 0;
         let rawItemDamage = utils_computeUnbuffedDamage(item);
+        console.log("Raw damage for " + item.type + " : " + rawItemDamage);
         // Normalise the actual damage with damage buffs
-		let buffedDamage = rawItemDamage * getTotalBuffValue("damage");
+		let buffedDamage = rawItemDamage * this.getTotalBuffValue("damage");
 		// Factor in critical strikes
-		let critChance = (item.critical ?? 0) + getTotalBuffValue("critical");
+		let critChance = ((item.critical ?? 0) + this.getTotalBuffValue("critical")) / 100;
+        critChance = critChance >= 1 ? 1 : critChance;
 		buffedDamage = buffedDamage + (buffedDamage * critChance / 2);
 		// Nerf related to accuracy
-		let effectiveAccuracy = ( 90 + (item.accuracy ?? 0) + getTotalBuffValue("accuracy") ) / 100;
+		let effectiveAccuracy = ( 90 + (item.accuracy ?? 0) + this.getTotalBuffValue("accuracy") ) / 100;
 		effectiveAccuracy = effectiveAccuracy >= 1 ? 1 : effectiveAccuracy;
 		buffedDamage = buffedDamage * effectiveAccuracy;
+        console.log("Total damage : " + buffedDamage);
         return buffedDamage;
     }
 
