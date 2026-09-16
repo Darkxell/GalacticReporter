@@ -26,9 +26,11 @@
 
                 // For demo purposes, we just take the last ship in the presets
                 var ship = presets.at(-1);
+                console.log("Selected ship:");
+                console.log(ship);
 
                 // Compute the damage profile for the ship we just made
-                // 60 seconds, 1 ennemy
+                // 60 seconds, 1 enemy
                 const profile = computeProfile(ship, 60, 1);
                 console.log("Computed damage profile :");
                 console.log(profile);

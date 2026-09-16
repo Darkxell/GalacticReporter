@@ -120,7 +120,7 @@ export function fetchPresets() {
         let shipclass = DATASET_SHIPS.data.classes.find(c => c.name === rawShip.class);
         if (shipclass === undefined) continue;
         shipLoadout.items = [];
-        let expectedItemset = shipclass.items.slice(0, -rawShip.itempenalty);
+        let expectedItemset = shipclass.items.slice(0, shipclass.items.length - rawShip.itempenalty);
         // Heuristically fetch the best item for each item slot of the ship's class
         for (let itemslot of expectedItemset) {
             let itemsCollection = DATASET_ITEMS.data[itemslot].entries;
