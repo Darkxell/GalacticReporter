@@ -47,8 +47,16 @@ function profileMobility(ship) {// TODO
     return { totalTravel: 150000, topSpeed: maxSpeed };
 }
 
-function profileValidity(ship) { //TODO
-    return "vega";
+
+function profileValidity(ship) {
+    let computedSystem = utils_getSystem(ship.armor.level, DATASET_SYSTEMS);
+    if(computedSystem === null) return "none";
+    for(let i of ship.items){
+        let itemSystem = utils_getSystem(i.level, DATASET_SYSTEMS);
+        if(itemSystem === null) return "none";
+        if(itemSystem.system !== computedSystem.system) return "none";
+    }
+    return computedSystem.system;
 }
 
 /* ----- Export functions below ----- */

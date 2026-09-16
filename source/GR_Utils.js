@@ -26,6 +26,8 @@ export function utils_verifyInputs(ship, duration, enemiesCount, algo) {
 /**
  * Utility function to get the matching system object from a given level
  * 
+ * @param level the internal ingame level, which is usually the level shown in gui minus 1
+ * 
  * @returns The first system object from the given system dataset where the given level would be allowed.
  * Returns null  if no system was found.
  * 
